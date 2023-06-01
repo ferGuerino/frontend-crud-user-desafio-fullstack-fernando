@@ -1,7 +1,8 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
-import { TLoginData } from "../pages/Login/validator";
+import { TLoginData } from "../components/LoginForm/loginFormSchema";
 import { api } from "../services/api";
 import { useNavigate } from "react-router-dom";
+import { TRegisterData } from "../components/RegisterForm/registerFormSchema";
 
 
 interface AuthProviderProps {
@@ -10,6 +11,7 @@ interface AuthProviderProps {
 
 interface AuthContextValue {
   signIn: (data:TLoginData) => void
+  userRegister: (data: TRegisterData) => void
   loading: boolean
 }
 
@@ -41,15 +43,28 @@ const AuthProvider = ({children}: AuthProviderProps) => {
       api.defaults.headers.common.authorization = `Bearer ${token}`
       localStorage.setItem("user-contacts:token", token)
 
-      navigate("dashboard")
+      navigate("home")
     } catch (error) {
       console.error(error)
       
     }
   }
 
+  const userRegister = async (formData: TRegisterData) => {
+    try {
+       setLoading(true);
+       await api.post("/users", formData);
+       console.log("Cadastro efetuado com sucesso");
+    } catch (error) {
+       console.log(error);
+    } finally {
+       setLoading(false);
+       navigate("/")
+    }
+ };
+
   return(
-    <AuthContext.Provider value={{signIn, loading}}>
+    <AuthContext.Provider value={{signIn, userRegister,loading}}>
       {children}
     </AuthContext.Provider>
   )

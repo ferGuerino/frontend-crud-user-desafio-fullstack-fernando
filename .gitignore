@@ -11,6 +11,8 @@ node_modules
 dist
 dist-ssr
 *.local
+.editorconfig
+.eslinttrc.cjs
 
 # Editor directories and files
 .vscode/*
