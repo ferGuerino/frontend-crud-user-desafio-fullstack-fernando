@@ -1,33 +1,25 @@
 import { useEffect, useState } from "react"
 import { api } from "../../services/api";
+import { useAuth } from "../../hooks/useAuth";
+import {  User } from "../../providers/AuthProvider";
+import { Contact } from "../../providers/ContactProvider";
+import { CreateContactForm } from "../../components/CreateContactForm"
 
 
-interface Contact {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  createdAt: string;
-}
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  password: string
-  createdAt: string;
-}
+
 
 const HomePage = () => {
-
-    const [contacts, setContacts] = useState<Contact[]>([])
-    const [user, setUser] = useState<User | null>(null)
+ 
+  const { user, setUser, userLogout } = useAuth();
+  const [contacts, setContacts] = useState<Contact[]>([])
+    
 
     useEffect(()=>{
+      
       (async () =>{
         const response = await api.get<User>("users/self")
-
+  
         setUser(response.data)
       })(),
       (async () =>{
@@ -39,16 +31,21 @@ const HomePage = () => {
       
     return (
       <>
-        <h1>Bem vindo, {user?.name}</h1>
-        <h3>Dados do usuário</h3>
-        <div>
-          <p>{user?.name}</p>
-          <p>{user?.email}</p>
-          <p>{user?.phone}</p>
-        </div>
+        <header>          
+          <h1>Bem vindo, {user?.name}</h1>         
+          <button onClick={() => userLogout()}>Logout</button>
+        </header>
+        <section>
+          <h3>Dados do usuário</h3>
+          <div>
+            <p>{user?.name}</p>
+            <p>{user?.email}</p>
+            <p>{user?.phone}</p>
+          </div>
+        </section>
         <div>
           <h2>Contatos</h2>
-          <button>Criar contato</button>
+          <CreateContactForm/>
         </div>
         <ul>
           {

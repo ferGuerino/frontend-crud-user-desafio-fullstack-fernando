@@ -10,9 +10,20 @@ interface AuthProviderProps {
 }
 
 interface AuthContextValue {
+  user: User | null
+  setUser: React.Dispatch<React.SetStateAction<User | null>>
   signIn: (data:TLoginData) => void
   userRegister: (data: TRegisterData) => void
   loading: boolean
+  userLogout: () => void
+}
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  password: string
+  createdAt: string;
 }
 
 const AuthContext = createContext<AuthContextValue>({} as AuthContextValue)
@@ -21,10 +32,12 @@ const AuthProvider = ({children}: AuthProviderProps) => {
 
   const navigate = useNavigate()
 
+  const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(()=>{
     const token = localStorage.getItem("user-contacts:token")
+    
 
     if(!token){
       navigate("/")
@@ -32,6 +45,7 @@ const AuthProvider = ({children}: AuthProviderProps) => {
 
     api.defaults.headers.common.authorization = `Bearer ${token}`
     setLoading(false)
+    
   },[])
 
   const signIn = async (data: TLoginData) => {
@@ -63,8 +77,14 @@ const AuthProvider = ({children}: AuthProviderProps) => {
     }
  };
 
+ const userLogout = () => {
+  localStorage.removeItem("user-contacts:token");  
+  setUser(null);
+  navigate("/");
+};
+
   return(
-    <AuthContext.Provider value={{signIn, userRegister,loading}}>
+    <AuthContext.Provider value={{user, setUser, signIn, userRegister, loading, userLogout}}>
       {children}
     </AuthContext.Provider>
   )
