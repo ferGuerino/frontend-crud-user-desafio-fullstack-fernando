@@ -3,7 +3,8 @@ import { api } from "../../services/api";
 import { useAuth } from "../../hooks/useAuth";
 import {  User } from "../../providers/AuthProvider";
 import { Contact } from "../../providers/ContactProvider";
-import { CreateContactForm } from "../../components/CreateContactForm"
+
+import { ModalAddContact } from "../../components/ModalAddContact";
 
 
 
@@ -13,6 +14,7 @@ const HomePage = () => {
  
   const { user, setUser, userLogout } = useAuth();
   const [contacts, setContacts] = useState<Contact[]>([])
+  const [isOpenModal, setIsOpenModal] = useState(false)
     
 
     useEffect(()=>{
@@ -28,6 +30,8 @@ const HomePage = () => {
         setContacts(response.data)
       })()
     }, [])
+
+    const toggleModal = () => setIsOpenModal(!isOpenModal)
       
     return (
       <>
@@ -44,8 +48,14 @@ const HomePage = () => {
           </div>
         </section>
         <div>
-          <h2>Contatos</h2>
-          <CreateContactForm/>
+          <div>
+            <h2>Contatos</h2>
+            <button type="button" onClick={toggleModal}>Add Contato</button>
+          </div>
+          {
+            isOpenModal && <ModalAddContact toggleModal={toggleModal} contacts={contacts} setContacts={setContacts}/>
+          }
+          
         </div>
         <ul>
           {

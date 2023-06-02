@@ -3,7 +3,7 @@ import { TLoginData } from "../components/LoginForm/loginFormSchema";
 import { api } from "../services/api";
 import { useNavigate } from "react-router-dom";
 import { TRegisterData } from "../components/RegisterForm/registerFormSchema";
-import { TCreateContactData } from "../components/CreateContactForm/createContactForm Schema";
+
 
 
 interface ContactProviderProps {
@@ -12,7 +12,7 @@ interface ContactProviderProps {
 
 interface ContactContextValue {
   contacts: Contact[] | null
-  createContact: (contactData: TCreateContactData) => Promise<void>
+  //createContact: (contactData: TCreateContactData) => Promise<void>
   
   
 }
@@ -42,6 +42,7 @@ const ContactProvider = ({children}: ContactProviderProps) => {
     })()
   }, [])
 
+  /*
   const createContact = async (formData: TCreateContactData) => {
     const token = localStorage.getItem("user-contacts:token");
     try {
@@ -57,10 +58,10 @@ const ContactProvider = ({children}: ContactProviderProps) => {
     } catch (error) {
        console.log(error); 
     }
-} 
+  } */
 
   return(
-    <ContactContext.Provider value={{contacts, createContact}}>
+    <ContactContext.Provider value={{contacts}}>
       {children}
     </ContactContext.Provider>
   )

@@ -1,7 +1,8 @@
+/*
 import { useContext } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { AuthContext } from "../../providers/AuthProvider";
-import { TCreateContactData, createContactSchema } from "./createContactForm Schema";
+import { TCreateContactData, createContactSchema } from "./createContactFormSchema";
 import { ContactContext } from "../../providers/ContactProvider";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useContact } from "../../hooks/useContact";
@@ -29,9 +30,9 @@ const CreateContactForm = () => {
           <input type="email" id="email" {...register("email")}/>  
           <label htmlFor="phone">Telefone</label>
           <input type="" id="text" {...register("phone")}/>
-          <button>Criar Contato</button>
+          <button>Criar</button>
       </form>
   )
 }
 
-export {CreateContactForm}
+export {CreateContactForm} */
