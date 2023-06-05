@@ -1,9 +1,5 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
-import { TLoginData } from "../components/LoginForm/loginFormSchema";
 import { api } from "../services/api";
-import { useNavigate } from "react-router-dom";
-import { TRegisterData } from "../components/RegisterForm/registerFormSchema";
-
 
 
 interface ContactProviderProps {
@@ -12,10 +8,9 @@ interface ContactProviderProps {
 
 interface ContactContextValue {
   contacts: Contact[] | null
-  //createContact: (contactData: TCreateContactData) => Promise<void>
-  
   
 }
+
 export interface Contact {
   id: string; 
   name: string;
@@ -41,25 +36,7 @@ const ContactProvider = ({children}: ContactProviderProps) => {
       setContacts(response.data)
     })()
   }, [])
-
-  /*
-  const createContact = async (formData: TCreateContactData) => {
-    const token = localStorage.getItem("user-contacts:token");
-    try {
-        const request = await api.post("/contacts", formData, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-            }
-        })
-        const response = request.data
-        const newContact = [...contacts, response]
-        console.log(newContact)
-        setContacts(newContact);
-    } catch (error) {
-       console.log(error); 
-    }
-  } */
-
+  
   return(
     <ContactContext.Provider value={{contacts}}>
       {children}

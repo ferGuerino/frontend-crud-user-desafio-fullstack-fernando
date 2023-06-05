@@ -1,5 +1,5 @@
 import { createPortal } from "react-dom"
-import { Container } from "./style"
+import { ContainerModal } from "./style"
 import { ReactNode } from "react"
 
 
@@ -13,12 +13,13 @@ const Modal = ({toggleModal, children, showCloseButton = false}:  ModalProps) =>
   
   
   return createPortal(
-    <Container>
-      {showCloseButton && (<button className="close-button" onClick={toggleModal}>X</button>)}
-      <div>        
+    <ContainerModal>
+      
+      <div>    
+        {showCloseButton && (<button className="close-button" onClick={toggleModal}>X</button>)}    
         {children}
       </div>
-    </Container>,
+    </ContainerModal>,
     document.body
   )
 }

@@ -1,12 +1,11 @@
-import { Link } from "react-router-dom"
 import { RegisterForm } from "../../components/RegisterForm"
+import { StyledRegisterPage } from "./style"
 
 const RegisterPage = () => {
     return (
-      <div>
-        <RegisterForm />
-        <Link to="/">Login</Link>
-  </div>
+      <StyledRegisterPage>
+        <RegisterForm />        
+      </StyledRegisterPage>
     )
 }
 

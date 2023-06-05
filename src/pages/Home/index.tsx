@@ -3,9 +3,13 @@ import { api } from "../../services/api";
 import { useAuth } from "../../hooks/useAuth";
 import {  User } from "../../providers/AuthProvider";
 import { Contact } from "../../providers/ContactProvider";
-
+import { toast} from "react-toastify";
 import { ModalAddContact } from "../../components/ModalAddContact";
 import { ModalUpdateContact } from "../../components/ModalUpdateContact";
+import { Header } from "../../components/Header";
+import { UserSection } from "../../components/UserSection";
+import { Container } from "../../styles/Container";
+import { DivContacts, UlContacts } from "./style";
 
 
 
@@ -13,7 +17,7 @@ import { ModalUpdateContact } from "../../components/ModalUpdateContact";
 
 const HomePage = () => {
  
-  const { user, setUser, userLogout } = useAuth();
+  const { user, setUser} = useAuth();
   const [contacts, setContacts] = useState<Contact[]>([])
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
@@ -53,55 +57,45 @@ const HomePage = () => {
   
         const filteredContacts = contacts.filter((contact) => contact.id !== contactId);
         setContacts(filteredContacts);
+        toast.success("Contato deletado com sucesso!");
       } catch (error) {
+        toast.error("Ops!, Algo deu errado.");
         console.log(error);
       }
     }
       
     return (
       <>
-        <header>          
-          <h1>Bem vindo, {user?.name}</h1>         
-          <button onClick={() => userLogout()}>Logout</button>
-        </header>
-        <section>
-          <h3>Dados do usuário</h3>
-          <div>
-            <p>{user?.name}</p>
-            <p>{user?.email}</p>
-            <p>{user?.phone}</p>
-          </div>
-        </section>
-        <div>
-          <div>
+        <Header/>
+        <UserSection/>
+        <Container>
+          <DivContacts>
             <h2>Contatos</h2>
             <button type="button" onClick={toggleAddModal}>Add Contato</button>
-          </div>
+          </DivContacts>
           {
             isOpenAddModal  && <ModalAddContact toggleModal={toggleAddModal} contacts={contacts} setContacts={setContacts}/>
-          }
-          
-        </div>
-        <ul>
+          }       
+        <UlContacts>
           {
             contacts.map((contact) =>{ 
               return(                
-                <li key={contact.id}>
-                  <div>                    
+                <li className="liContact" key={contact.id}>
+                  <div className="liDivContact">                    
                     <p>{contact.name}</p>
                     <p>{contact.email}</p>
                     <p>{contact.phone}</p>
                   </div>
-                  <div>
+                  <div className="liDivBtn">
                     <button onClick={() => handleEditContact(contact)}>Editar</button>
                     <button onClick={() => handleDeleteContact(contact.id)}>Excluir</button>
-                  </div>
-                  
+                  </div>                  
                 </li>                   
               )
             })
           }
-        </ul>
+        </UlContacts>
+        </Container>
         {
           isOpenEditModal  && selectedContact && <ModalUpdateContact toggleModal={toggleEditModal} contact={selectedContact} contacts={contacts} setContacts={setContacts}/>
         }

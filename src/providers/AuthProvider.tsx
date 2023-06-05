@@ -3,6 +3,7 @@ import { TLoginData } from "../components/LoginForm/loginFormSchema";
 import { api } from "../services/api";
 import { useNavigate } from "react-router-dom";
 import { TRegisterData } from "../components/RegisterForm/registerFormSchema";
+import { toast} from "react-toastify";
 
 
 interface AuthProviderProps {
@@ -59,6 +60,7 @@ const AuthProvider = ({children}: AuthProviderProps) => {
 
       navigate("home")
     } catch (error) {
+      toast.error("Email ou senha inválido");
       console.error(error)
       
     }
@@ -66,14 +68,15 @@ const AuthProvider = ({children}: AuthProviderProps) => {
 
   const userRegister = async (formData: TRegisterData) => {
     try {
-       setLoading(true);
-       await api.post("/users", formData);
-       console.log("Cadastro efetuado com sucesso");
+        setLoading(true);
+        await api.post("/users", formData);
+        toast.success("Cadastro feito com sucesso!");
     } catch (error) {
-       console.log(error);
+        toast.error("Ops!, Algo deu errado.");
+        console.log(error);
     } finally {
-       setLoading(false);
-       navigate("/")
+        setLoading(false);
+        navigate("/")
     }
  };
 
