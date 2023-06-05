@@ -5,6 +5,7 @@ import {  User } from "../../providers/AuthProvider";
 import { Contact } from "../../providers/ContactProvider";
 
 import { ModalAddContact } from "../../components/ModalAddContact";
+import { ModalUpdateContact } from "../../components/ModalUpdateContact";
 
 
 
@@ -14,7 +15,9 @@ const HomePage = () => {
  
   const { user, setUser, userLogout } = useAuth();
   const [contacts, setContacts] = useState<Contact[]>([])
-  const [isOpenModal, setIsOpenModal] = useState(false)
+  const [isOpenAddModal, setIsOpenAddModal] = useState(false);
+  const [isOpenEditModal, setIsOpenEditModal] = useState(false);
+  const [selectedContact, setSelectedContact] = useState<Contact | null>(null)
     
 
     useEffect(()=>{
@@ -31,7 +34,29 @@ const HomePage = () => {
       })()
     }, [])
 
-    const toggleModal = () => setIsOpenModal(!isOpenModal)
+    const toggleAddModal = () => setIsOpenAddModal(!isOpenAddModal);
+    const toggleEditModal = () => setIsOpenEditModal(!isOpenEditModal);
+
+    const handleEditContact = (contact: Contact) => {
+      setSelectedContact(contact)
+      toggleEditModal()
+    }
+
+    const handleDeleteContact = async (contactId: string) => {
+      const token = localStorage.getItem("user-contacts:token");
+      try {
+        await api.delete(`/contacts/${contactId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        const filteredContacts = contacts.filter((contact) => contact.id !== contactId);
+        setContacts(filteredContacts);
+      } catch (error) {
+        console.log(error);
+      }
+    }
       
     return (
       <>
@@ -50,10 +75,10 @@ const HomePage = () => {
         <div>
           <div>
             <h2>Contatos</h2>
-            <button type="button" onClick={toggleModal}>Add Contato</button>
+            <button type="button" onClick={toggleAddModal}>Add Contato</button>
           </div>
           {
-            isOpenModal && <ModalAddContact toggleModal={toggleModal} contacts={contacts} setContacts={setContacts}/>
+            isOpenAddModal  && <ModalAddContact toggleModal={toggleAddModal} contacts={contacts} setContacts={setContacts}/>
           }
           
         </div>
@@ -68,14 +93,18 @@ const HomePage = () => {
                     <p>{contact.phone}</p>
                   </div>
                   <div>
-                    <button>Editar</button>
-                    <button>Excluir</button>
+                    <button onClick={() => handleEditContact(contact)}>Editar</button>
+                    <button onClick={() => handleDeleteContact(contact.id)}>Excluir</button>
                   </div>
+                  
                 </li>                   
               )
             })
           }
         </ul>
+        {
+          isOpenEditModal  && selectedContact && <ModalUpdateContact toggleModal={toggleEditModal} contact={selectedContact} contacts={contacts} setContacts={setContacts}/>
+        }
       </>
     )
 }
